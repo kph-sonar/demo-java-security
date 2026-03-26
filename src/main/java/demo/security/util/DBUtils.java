@@ -35,8 +35,5 @@ public class DBUtils {
         return items;
     }
     public void doNothing() {
-        while (true) {
-            
-        }
     }
 }
