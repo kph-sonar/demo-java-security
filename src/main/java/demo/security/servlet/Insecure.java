@@ -4,16 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,7 +17,6 @@ public class Insecure {
   public void badFunction(HttpServletRequest request) throws IOException {
     String obj = request.getParameter("data");
     ObjectMapper mapper = new ObjectMapper();
-    mapper.enableDefaultTyping();
     String val = mapper.readValue(obj, String.class);
     File tempDir;
     tempDir = File.createTempFile("", ".");
