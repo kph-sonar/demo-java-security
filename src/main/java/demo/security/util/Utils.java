@@ -1,6 +1,5 @@
 package demo.security.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 
 import javax.crypto.Cipher;
@@ -11,13 +10,15 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.*;
 import java.util.regex.Pattern;
 
 public class Utils {
+
+    // Files passed to deleteFile() are resolved against this directory and must
+    // stay within it; this prevents "../" sequences from deleting files outside
+    // of the intended location.
+    private static final File TARGET_DIRECTORY = new File(System.getProperty("java.io.tmpdir")).getAbsoluteFile();
 
     // Only allow simple arithmetic expressions to be evaluated: digits, basic
     // operators, parentheses and whitespace. This prevents arbitrary
@@ -37,7 +38,12 @@ public class Utils {
     }
 
     public static void deleteFile(String fileName) throws IOException {
-        File file = new File(fileName);
+        File file = new File(TARGET_DIRECTORY, fileName);
+        String canonicalDestinationPath = file.getCanonicalPath();
+        String canonicalTargetPath = TARGET_DIRECTORY.getCanonicalPath() + File.separator;
+        if (!canonicalDestinationPath.startsWith(canonicalTargetPath)) {
+            throw new IOException("Entry is outside of the target directory");
+        }
         FileUtils.forceDelete(file);
     }
 

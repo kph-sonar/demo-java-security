@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.owasp.encoder.Encode;
 
 @WebServlet("/helloWorld")
 public class HomeServlet extends HttpServlet {
@@ -23,7 +24,7 @@ public class HomeServlet extends HttpServlet {
         String name = request.getParameter("name").trim();
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        out.print("<h2>Hello "+escapeHtml(name)+ "</h2>");
+        out.print("<h2>Hello "+Encode.forHtml(name)+ "</h2>");
         out.close();
     }
 
@@ -31,18 +32,6 @@ public class HomeServlet extends HttpServlet {
                           HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
         doGet(request, response);
-    }
-
-    private static String escapeHtml(String input) {
-        if (input == null) {
-            return "";
-        }
-        return input
-                .replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#x27;");
     }
 
 }
