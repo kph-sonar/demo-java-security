@@ -24,7 +24,7 @@ public class AsymmetricEncryptionUtil {
         }
 
         PublicKey publicKey = keyPair.getPublic();
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         byte[] encryptedBytes = cipher.doFinal(plaintext.getBytes("UTF-8"));
         return Base64.getEncoder().encodeToString(encryptedBytes);
@@ -36,7 +36,7 @@ public class AsymmetricEncryptionUtil {
         }
 
         PrivateKey privateKey = keyPair.getPrivate();
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         byte[] decodedBytes = Base64.getDecoder().decode(ciphertext);
         byte[] decryptedBytes = cipher.doFinal(decodedBytes);

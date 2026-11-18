@@ -15,8 +15,15 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.*;
+import java.util.regex.Pattern;
 
 public class Utils {
+
+    // Only allow simple arithmetic expressions to be evaluated: digits, basic
+    // operators, parentheses and whitespace. This prevents arbitrary
+    // JavaScript (and therefore arbitrary code) from being injected and
+    // executed via untrusted input.
+    private static final Pattern SAFE_SCRIPT_PATTERN = Pattern.compile("^[0-9+\\-*/().\\s]*$");
 
     public static KeyPair generateKey() {
         KeyPairGenerator keyPairGen;
@@ -35,6 +42,9 @@ public class Utils {
     }
 
     public static void executeJs(String input) throws ScriptException {
+        if (input == null || !SAFE_SCRIPT_PATTERN.matcher(input).matches()) {
+            throw new IllegalArgumentException("Invalid script input");
+        }
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("JavaScript");
         engine.eval(input);
