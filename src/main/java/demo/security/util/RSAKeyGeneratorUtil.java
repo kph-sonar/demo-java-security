@@ -12,7 +12,7 @@ public class RSAKeyGeneratorUtil {
     private BigInteger phi;
     private BigInteger e;
     private BigInteger d;
-    private int bitLength;
+    private final int bitLength;
     private final Random rnd = new SecureRandom();
 
     public RSAKeyGeneratorUtil(int bitLength) {
