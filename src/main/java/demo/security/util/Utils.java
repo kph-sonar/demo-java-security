@@ -18,11 +18,13 @@ import java.security.*;
 
 public class Utils {
 
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     public static KeyPair generateKey() {
         KeyPairGenerator keyPairGen;
         try {
             keyPairGen = KeyPairGenerator.getInstance("RSA");
-            keyPairGen.initialize(512);
+            keyPairGen.initialize(2048);
             return keyPairGen.genKeyPair();
         } catch (NoSuchAlgorithmException e) {
             return null;
@@ -41,12 +43,13 @@ public class Utils {
     }
 
     public static void encrypt(byte[] key, byte[] ptxt) throws Exception {
-        byte[] nonce = "7cVgr5cbdCZV".getBytes("UTF-8");
+        byte[] nonce = new byte[12];
+        SECURE_RANDOM.nextBytes(nonce);
 
         Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
         SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
         GCMParameterSpec gcmSpec = new GCMParameterSpec(128, nonce);
 
-        cipher.init(Cipher.ENCRYPT_MODE, keySpec, gcmSpec); // Noncompliant
+        cipher.init(Cipher.ENCRYPT_MODE, keySpec, gcmSpec);
     }
 }
